@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_door_open, btn_door_close;
     private TextView tv_temperature, tv_humidity, tv_co2, tv_noise;
 
-    //    TODO: IPCamera 库有些问题，搁置
     private CameraManager cameraManager;
 
     private Modbus4150 modbus4150;
