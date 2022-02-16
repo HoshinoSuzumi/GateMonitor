@@ -24,7 +24,7 @@ public class RecordsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private EditText editText_from, editText_to;
-    private CheckBox checkBox_temp, checkBox_humi, checkBox_co2, checkBox_noise;
+//    private CheckBox checkBox_temp, checkBox_humi, checkBox_co2, checkBox_noise;
 
     private final ArrayList<String> filteredColumns = new ArrayList<>();
 
@@ -38,20 +38,20 @@ public class RecordsActivity extends AppCompatActivity {
         editText_from.setOnFocusChangeListener(new MyFocusChangeListener());
         editText_to.setOnClickListener(new DatePickOnClickListener());
         editText_to.setOnFocusChangeListener(new MyFocusChangeListener());
-        checkBox_temp = findViewById(R.id.checkBox_temp);
-        checkBox_humi = findViewById(R.id.checkBox_humi);
-        checkBox_co2 = findViewById(R.id.checkBox_co2);
-        checkBox_noise = findViewById(R.id.checkBox_noise);
+//        checkBox_temp = findViewById(R.id.checkBox_temp);
+//        checkBox_humi = findViewById(R.id.checkBox_humi);
+//        checkBox_co2 = findViewById(R.id.checkBox_co2);
+//        checkBox_noise = findViewById(R.id.checkBox_noise);
 
         filteredColumns.add("temperature");
         filteredColumns.add("humidity");
         filteredColumns.add("co2");
         filteredColumns.add("noise");
 
-        checkBox_temp.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        checkBox_humi.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        checkBox_co2.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        checkBox_noise.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+//        checkBox_temp.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+//        checkBox_humi.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+//        checkBox_co2.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+//        checkBox_noise.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
 
         Objects.requireNonNull(getSupportActionBar()).setTitle("历史数据");
 
@@ -74,7 +74,7 @@ public class RecordsActivity extends AppCompatActivity {
 
     public void buttonQueryClick(View view) {
         if (!editText_from.getText().toString().equals("") && !editText_to.getText().toString().equals("")) {
-            updateData((String[]) filteredColumns.toArray(), editText_from.getText().toString(), editText_to.getText().toString());
+            updateData(editText_from.getText().toString(), editText_to.getText().toString());
         }
     }
 
@@ -127,38 +127,38 @@ public class RecordsActivity extends AppCompatActivity {
         }
     }
 
-    class MyOnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-        @SuppressLint("NonConstantResourceId")
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            switch (buttonView.getId()) {
-                case R.id.checkBox_temp:
-                    if (isChecked) {
-                        if (!filteredColumns.contains("temperature"))
-                            filteredColumns.add("temperature");
-                    } else
-                        filteredColumns.remove("temperature");
-                    break;
-                case R.id.checkBox_humi:
-                    if (isChecked) {
-                        if (!filteredColumns.contains("humidity")) filteredColumns.add("humidity");
-                    } else
-                        filteredColumns.remove("humidity");
-                    break;
-                case R.id.checkBox_co2:
-                    if (isChecked) {
-                        if (!filteredColumns.contains("co2")) filteredColumns.add("co2");
-                    } else
-                        filteredColumns.remove("co2");
-                    break;
-                case R.id.checkBox_noise:
-                    if (isChecked) {
-                        if (!filteredColumns.contains("noise")) filteredColumns.add("noise");
-                    } else
-                        filteredColumns.remove("noise");
-                    break;
-            }
-            System.out.println(Arrays.toString(filteredColumns.toArray()));
-        }
-    }
+//    class MyOnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+//        @SuppressLint("NonConstantResourceId")
+//        @Override
+//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//            switch (buttonView.getId()) {
+//                case R.id.checkBox_temp:
+//                    if (isChecked) {
+//                        if (!filteredColumns.contains("temperature"))
+//                            filteredColumns.add("temperature");
+//                    } else
+//                        filteredColumns.remove("temperature");
+//                    break;
+//                case R.id.checkBox_humi:
+//                    if (isChecked) {
+//                        if (!filteredColumns.contains("humidity")) filteredColumns.add("humidity");
+//                    } else
+//                        filteredColumns.remove("humidity");
+//                    break;
+//                case R.id.checkBox_co2:
+//                    if (isChecked) {
+//                        if (!filteredColumns.contains("co2")) filteredColumns.add("co2");
+//                    } else
+//                        filteredColumns.remove("co2");
+//                    break;
+//                case R.id.checkBox_noise:
+//                    if (isChecked) {
+//                        if (!filteredColumns.contains("noise")) filteredColumns.add("noise");
+//                    } else
+//                        filteredColumns.remove("noise");
+//                    break;
+//            }
+//            System.out.println(Arrays.toString(filteredColumns.toArray()));
+//        }
+//    }
 }

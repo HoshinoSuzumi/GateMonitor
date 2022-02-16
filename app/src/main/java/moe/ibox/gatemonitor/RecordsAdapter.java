@@ -61,11 +61,13 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getTextViewItemTemperature().setText(String.valueOf(quaChannelData.get(position).getTemperature()));
-        holder.getTextViewItemHumidity().setText(String.valueOf(quaChannelData.get(position).getHumidity()));
-        holder.getTextViewItemCo2().setText(String.valueOf(quaChannelData.get(position).getCo2()));
-        holder.getTextViewItemNoise().setText(String.valueOf(quaChannelData.get(position).getNoise()));
-        holder.getTextViewItemTime().setText(String.valueOf(quaChannelData.get(position).getTime()));
+        if (this.getItemCount() > 0) {
+            holder.getTextViewItemTemperature().setText(String.valueOf(quaChannelData.get(position).getTemperature()));
+            holder.getTextViewItemHumidity().setText(String.valueOf(quaChannelData.get(position).getHumidity()));
+            holder.getTextViewItemCo2().setText(String.valueOf(quaChannelData.get(position).getCo2()));
+            holder.getTextViewItemNoise().setText(String.valueOf(quaChannelData.get(position).getNoise()));
+            holder.getTextViewItemTime().setText(String.valueOf(quaChannelData.get(position).getTime()));
+        }
     }
 
     @Override

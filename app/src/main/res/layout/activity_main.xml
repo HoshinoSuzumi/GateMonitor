@@ -116,12 +116,12 @@
                 android:id="@+id/button_screenshot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="16dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
                 android:text="截图"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintHorizontal_bias="0.493"
                 app:layout_constraintStart_toEndOf="@+id/button_cam_right"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -137,6 +137,24 @@
                 app:layout_constraintStart_toStartOf="@+id/button_screenshot"
                 app:layout_constraintTop_toBottomOf="@+id/button_screenshot"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/button_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="历史记录"
+                app:layout_constraintEnd_toEndOf="@+id/button_screenshots_list"
+                app:layout_constraintStart_toStartOf="@+id/button_screenshots_list"
+                app:layout_constraintTop_toBottomOf="@+id/button_screenshots_list" />
+
+            <Button
+                android:id="@+id/button_tts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="语音播放"
+                app:layout_constraintEnd_toEndOf="@+id/button_history"
+                app:layout_constraintStart_toStartOf="@+id/button_history"
+                app:layout_constraintTop_toBottomOf="@+id/button_history" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
@@ -316,6 +334,7 @@
                     android:id="@+id/imageView_doorL"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
+                    android:translationX="26dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imageView_doorR"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -327,7 +346,7 @@
                     android:id="@+id/imageView_doorR"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginEnd="68dp"
+                    android:layout_marginEnd="104dp"
                     android:scaleX="-1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

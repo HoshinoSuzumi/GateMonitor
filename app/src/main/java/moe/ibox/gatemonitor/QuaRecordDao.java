@@ -66,19 +66,21 @@ public class QuaRecordDao {
                 orderBy
         );
         ArrayList<QuaChannelData> quaChannelDataList = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isLast()) {
-            quaChannelDataList.add(new QuaChannelData(
-                            cursor.getDouble(cursor.getColumnIndexOrThrow("temperature")),
-                            cursor.getDouble(cursor.getColumnIndexOrThrow("humidity")),
-                            cursor.getDouble(cursor.getColumnIndexOrThrow("co2")),
-                            cursor.getDouble(cursor.getColumnIndexOrThrow("noise")),
-                            cursor.getString(cursor.getColumnIndexOrThrow("time"))
-                    )
-            );
-            cursor.moveToNext();
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isLast()) {
+                quaChannelDataList.add(new QuaChannelData(
+                                cursor.getDouble(cursor.getColumnIndexOrThrow("temperature")),
+                                cursor.getDouble(cursor.getColumnIndexOrThrow("humidity")),
+                                cursor.getDouble(cursor.getColumnIndexOrThrow("co2")),
+                                cursor.getDouble(cursor.getColumnIndexOrThrow("noise")),
+                                cursor.getString(cursor.getColumnIndexOrThrow("time"))
+                        )
+                );
+                cursor.moveToNext();
+            }
+            cursor.close();
         }
-        cursor.close();
         return quaChannelDataList;
     }
 

@@ -139,33 +139,33 @@
             android:ems="10"
             android:inputType="datetime" />
 
-        <CheckBox
-            android:id="@+id/checkBox_temp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="温度" />
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/checkBox_temp"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:checked="true"-->
+        <!--            android:text="温度" />-->
 
-        <CheckBox
-            android:id="@+id/checkBox_humi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="湿度" />
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/checkBox_humi"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:checked="true"-->
+        <!--            android:text="湿度" />-->
 
-        <CheckBox
-            android:id="@+id/checkBox_co2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="二氧化碳" />
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/checkBox_co2"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:checked="true"-->
+        <!--            android:text="二氧化碳" />-->
 
-        <CheckBox
-            android:id="@+id/checkBox_noise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="噪音"
-            android:checked="true" />
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/checkBox_noise"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="噪音"-->
+        <!--            android:checked="true" />-->
 
         <Button
             android:id="@+id/button_query"
