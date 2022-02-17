@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/activity_captures.xml" value="0.3619791666666667" />
         <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/activity_main.xml" value="0.2648648648648649" />
         <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/activity_records.xml" value="0.5359375" />
+        <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/captures_item.xml" value="0.3619791666666667" />
+        <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/content_scrolling.xml" value="0.3619791666666667" />
         <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/records_item.xml" value="0.30364583333333334" />
         <entry key="..\:/Code/IoT/Android/GateMonitor/app/src/main/res/layout/recycler_view_item.xml" value="0.3619791666666667" />
       </map>

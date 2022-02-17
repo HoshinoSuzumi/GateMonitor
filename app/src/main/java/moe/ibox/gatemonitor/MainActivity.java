@@ -1,11 +1,18 @@
 package moe.ibox.gatemonitor;
 
+import static android.content.ContentValues.TAG;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -13,19 +20,27 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.nle.mylibrary.forUse.mdbus4150.Modbus4150;
 import com.nle.mylibrary.forUse.zigbee.FourChannelValConvert;
 import com.nle.mylibrary.forUse.zigbee.Zigbee;
 import com.nle.mylibrary.transfer.DataBusFactory;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -82,11 +97,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        modbus4150 = new Modbus4150(DataBusFactory.newSocketDataBus("172.16.11.15", 6001));
-        zigbeeSerial = new Zigbee(DataBusFactory.newSocketDataBus("172.16.11.15", 6002));
+        modbus4150 = new Modbus4150(DataBusFactory.newSocketDataBus("192.168.5.2", 6001));
+        zigbeeSerial = new Zigbee(DataBusFactory.newSocketDataBus("192.168.5.2", 6003));
 
         try {
-            modbus4150.closeRelay(MODBUS4150_DOOR_CLOSE, null);
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            modbus4150.openRelay(MODBUS4150_DOOR_CLOSE, isSuccess -> Toast.makeText(this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
+            modbus4150.closeRelay(MODBUS4150_DOOR_OPEN, isSuccess -> Toast.makeText(this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,11 +120,44 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         modbus4150.stopConnect();
         zigbeeSerial.stopConnect();
+        cameraManager.releaseCamera();
         QuaChannelFetchingThread = null;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cameraManager.releaseCamera();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        monitorView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                cameraManager.openCamera();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+    }
+
     private void initUI() {
-        monitorView = (TextureView) findViewById(R.id.surfaceView_monitor);
+        monitorView = findViewById(R.id.surfaceView_monitor);
         /* Camera control */
         btn_cam_stop = findViewById(R.id.button_cam_stop);
         btn_cam_up = findViewById(R.id.button_cam_up);
@@ -172,13 +226,13 @@ public class MainActivity extends AppCompatActivity {
         QuaChannelFetchingThread = new Thread(() -> {
             while (true) {
                 try {
-//                    QuaChannelData quaChannelData = fetchQuaChannelData();
-                    QuaChannelData quaChannelData = new QuaChannelData(
-                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
-                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
-                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
-                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString())
-                    );
+                    QuaChannelData quaChannelData = fetchQuaChannelData();
+//                    QuaChannelData quaChannelData = new QuaChannelData(
+//                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
+//                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
+//                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString()),
+//                            Double.parseDouble(new Formatter().format("%.2f", new Random().nextDouble() * 100).toString())
+//                    );
                     updateQuaChannelDataOnUi(quaChannelData);
                     /* Insert into database */
                     QuaRecordDao quaRecordDao = new QuaRecordDao(MainActivity.this);
@@ -222,21 +276,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class OnDoorAndScreenshotClickListener implements View.OnClickListener {
-        @SuppressLint("NonConstantResourceId")
+        @SuppressLint({"NonConstantResourceId", "Range", "Recycle"})
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.button_screenshot:
                     cameraManager.capture(String.valueOf(getExternalFilesDir("capture")), System.currentTimeMillis() + ".png");
+                    Snackbar.make(findViewById(R.id.surfaceView_monitor), "已保存截图", BaseTransientBottomBar.LENGTH_LONG).show();
                     break;
                 case R.id.button_screenshots_list:
-                    Intent intentPick = new Intent(Intent.ACTION_PICK, null);
-                    intentPick.setDataAndType(Uri.fromFile(getExternalFilesDir("capture")), "image/*");
-                    startActivityForResult(intentPick, 100);
+                    Intent capturesIntent = new Intent();
+                    capturesIntent.setClass(MainActivity.this, CapturesActivity.class);
+                    startActivity(capturesIntent);
                     break;
                 case R.id.button_door_open:
                     try {
-                        modbus4150.openRelay(MODBUS4150_DOOR_OPEN, null);
+                        modbus4150.openRelay(MODBUS4150_DOOR_CLOSE, isSuccess -> Toast.makeText(MainActivity.this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
+                        modbus4150.closeRelay(MODBUS4150_DOOR_OPEN, isSuccess -> Toast.makeText(MainActivity.this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -244,16 +300,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.button_door_close:
                     try {
-                        modbus4150.closeRelay(MODBUS4150_DOOR_CLOSE, null);
+                        modbus4150.openRelay(MODBUS4150_DOOR_OPEN, isSuccess -> Toast.makeText(MainActivity.this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
+                        modbus4150.closeRelay(MODBUS4150_DOOR_CLOSE, isSuccess -> Toast.makeText(MainActivity.this, isSuccess ? "成功" : "失败", Toast.LENGTH_SHORT).show());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     doorAnimator.reverse();
                     break;
                 case R.id.button_history:
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, RecordsActivity.class);
-                    startActivity(intent);
+                    Intent historyIntent = new Intent();
+                    historyIntent.setClass(MainActivity.this, RecordsActivity.class);
+                    startActivity(historyIntent);
                     break;
                 case R.id.button_tts:
                     tts.speak(
